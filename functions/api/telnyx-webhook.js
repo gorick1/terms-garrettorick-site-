@@ -36,7 +36,7 @@ export async function onRequestPost(context) {
   const kvKey = `subscriber:${from}`;
   const existing = await env.SUBSCRIBERS.get(kvKey, "json");
 
-  if (text === "YES" || text === "Y") {
+  if (text === "YES" || text === "Y" || text === "START" || text === "SUBSCRIBE") {
     await env.SUBSCRIBERS.put(kvKey, JSON.stringify({
       phone: from,
       consentedAt: existing?.consentedAt ?? Date.now(),
@@ -65,6 +65,19 @@ export async function onRequestPost(context) {
       confirmed: false,
       optedOutAt: Date.now(),
     }));
+  } else if (text === "HELP") {
+    await fetch("https://api.telnyx.com/v2/messages", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${env.TELNYX_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: env.TELNYX_FROM_NUMBER,
+        to: from,
+        text: "This number sends personal SMS notifications. For support, contact contact@garrettorick.com. Reply STOP to unsubscribe.",
+      }),
+    });
   }
 
   return new Response("ok", { status: 200 });
