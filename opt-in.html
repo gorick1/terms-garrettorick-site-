@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SMS Opt-In — Garrett Orick</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a href="/" class="brand">Garrett Orick</a>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about.html">About</a>
+      <a href="/services.html">Services</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/opt-in.html" class="active">SMS Opt-In</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+<h1>Garrett Orick SMS Notifications &mdash; Opt In</h1>
+<p class="lede">Enter your phone number below to receive home-automation notifications from Garrett Orick. You'll get a text asking you to reply <strong>YES</strong> to confirm before anything else is sent.</p>
+
+<div class="card">
+<form id="optin-form">
+  <div class="field">
+    <label for="phone">Phone number</label>
+    <input type="tel" id="phone" name="phone" placeholder="(555) 555-5555" required>
+  </div>
+  <div class="field consent-row">
+    <input type="checkbox" id="consent" name="consent" required>
+    <label for="consent" style="font-weight:400; margin:0;">
+      I agree to receive home-automation SMS alerts, reminders, and status update messages from Garrett Orick.
+      Message and data rates may apply. See <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy Policy</a>.
+      Reply STOP to opt out, HELP for help.
+    </label>
+  </div>
+  <button type="submit" class="btn">Send confirmation text</button>
+  <p id="status" role="status"></p>
+</form>
+</div>
+
+<h2>How this works</h2>
+<p>Garrett Orick is the sole owner and operator of this personal home-automation notification service. Submitting this form sends a one-time confirmation text; the number is only added to the notification list after replying YES to that text.</p>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p>Garrett Orick &middot; Greeley, CO &middot; (970) 617-1993 &middot; <a href="mailto:contact@garrettorick.com">contact@garrettorick.com</a></p>
+    <p><a href="/privacy.html">Privacy Policy</a> &middot; <a href="/terms.html">Terms and Conditions</a></p>
+  </div>
+</footer>
+
+<script>
+const form = document.getElementById("optin-form");
+const status = document.getElementById("status");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  status.className = "";
+  status.textContent = "Sending...";
+  const phone = document.getElementById("phone").value;
+  const consent = document.getElementById("consent").checked;
+
+  try {
+    const res = await fetch("/api/subscribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone, consent }),
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.ok) {
+      status.className = "error";
+      status.textContent = data.error || "Something went wrong. Please try again.";
+      return;
+    }
+
+    status.className = "ok";
+    if (data.alreadyConfirmed) {
+      status.textContent = "This number is already confirmed.";
+    } else {
+      status.textContent = "Check your phone — reply YES to the text we just sent to finish signing up.";
+      form.reset();
+    }
+  } catch {
+    status.className = "error";
+    status.textContent = "Network error. Please try again.";
+  }
+});
+</script>
+</body>
+</html>
