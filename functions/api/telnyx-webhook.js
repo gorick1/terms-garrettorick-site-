@@ -75,7 +75,7 @@ export async function onRequestPost(context) {
       body: JSON.stringify({
         from: env.TELNYX_FROM_NUMBER,
         to: from,
-        text: "This number sends personal SMS notifications. For support, contact contact@garrettorick.com. Reply STOP to unsubscribe.",
+        text: "Garrett Orick SMS notifications: alerts, reminders, and status updates. For support, contact contact@garrettorick.com. Reply STOP to unsubscribe.",
       }),
     });
   }
