@@ -40,7 +40,7 @@ export async function onRequestPost(context) {
     body: JSON.stringify({
       from: env.TELNYX_FROM_NUMBER,
       to: phone,
-      text: "Garrett Orick: You requested home-automation SMS alerts, reminders, and status updates. Reply YES to confirm, STOP to opt out. Msg&data rates may apply.",
+      text: "Garrett Orick: You requested SMS alerts, reminders, and status updates. Reply YES to confirm, STOP to opt out. Msg&data rates may apply.",
     }),
   });
 
