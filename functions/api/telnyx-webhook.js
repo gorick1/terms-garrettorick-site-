@@ -54,7 +54,7 @@ export async function onRequestPost(context) {
       body: JSON.stringify({
         from: env.TELNYX_FROM_NUMBER,
         to: from,
-        text: "Garrett Orick: You're subscribed! Reply STOP anytime to opt out, HELP for help.",
+        text: "Welcome to recurring SMS alerts, reminders, and status updates from Garrett Orick. Reply STOP to opt out. Reply HELP for help.",
       }),
     });
   } else if (text === "STOP" || text === "STOPALL" || text === "UNSUBSCRIBE" || text === "CANCEL") {
@@ -75,7 +75,7 @@ export async function onRequestPost(context) {
       body: JSON.stringify({
         from: env.TELNYX_FROM_NUMBER,
         to: from,
-        text: "Garrett Orick SMS notifications: alerts, reminders, and status updates. For support, contact contact@garrettorick.com. Reply STOP to unsubscribe.",
+        text: "Garrett Orick: Please reach out to us at terms.garrettorick.com, contact@garrettorick.com, or (970) 617-1993 for help.",
       }),
     });
   }
